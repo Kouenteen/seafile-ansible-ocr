@@ -6,7 +6,7 @@ This is a small project chosen to teach me how to use ansible by deploying the "
 The deployment is using Ansible's modules as possible. For some tasks, I didn't find a way other than using the module "raw" to send "dirty" SSH commands.
 
 ## How to use
-There are some prerequisites in order to use it.
+There are some important prerequisites before using it.
 
 1. The "nodemanager" here is a PopOS 21.04 (Ubuntu-based), with two deployment nodes which are running on Debian 10 codename Buster : "seafile1" & "seafile2".
 2. On the nodemanager, you will need "SSH", "sshpass", "python3-virtualenv" packages. I also created a user "user-ansible" on it for all ansible-related activities. On the deployment nodes, add the "sudo" package. 
