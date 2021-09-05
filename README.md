@@ -1,11 +1,11 @@
 # seafile-ansible-ocr
-Seafile deployment by using Ansible automation tool.
+TL;DR : Seafile deployment by using Ansible automation tool.
 
-# What this repository is about ?
+## What this repository is about ?
 This is a small project chosen to teach me how to use ansible by deploying the "Open Source File Sync and Share Software" Seafile.
 The deployment is using Ansible's modules as possible. For some tasks, I didn't find a way other than using the module "raw" to send "dirty" SSH commands.
 
-# How to use
+## How to use
 There are some prerequisites in order to use it.
 
 1. The "nodemanager" here is a PopOS 21.04 (Ubuntu-based), with two deployment nodes which are running on Debian 10 codename Buster : "seafile1" & "seafile2".
