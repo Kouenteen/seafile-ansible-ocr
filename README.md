@@ -14,7 +14,7 @@ There are some important prerequisites before using it.
 4. After that, still on the nodemanager, add the deployment nodes in the file "# nano /etc/hosts" because I didn't have any local DNS server.
 5. Activate root login via SSH for "seafile1" and "seafile2" nodes, restart the service then accept their keys : "$ ssh root@seafile1" & "$ ssh root@seafile2".
 6. By using ansible's module "debug", hash a password for the future "user-ansible" that we'll create on "seafile1" and "seafile2" nodes.
-7. Create the "user-ansible" user via ansible with your precedently hashed password, and add him into the "sudo" group. It should return : 
+7. Create the user "user-ansible" via ansible with your precedently hashed password, and add him into the "sudo" group. It should return : 
 <pre>$ ansible -i inventaire.ini -m user -a 'name=user-ansible groups=sudo append=yes ' --user user-ansible --ask-pass --become --ask-become-pass all
 seafile2 | SUCCESS => {
   "append": true,
