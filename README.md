@@ -43,7 +43,7 @@ seafile1 | SUCCESS => {
   "uid": 1001
 }</pre>
 
-8. Still on the nodemanager, generate ECDSA SSH keys : $' ssh-keygen -t ecdsa' and by using the module 'authorized_key', send them to the nodes :
+8. Still on the nodemanager, generate ECDSA SSH keys : '$ ssh-keygen -t ecdsa' and by using the module 'authorized_key', send them to the nodes :
 <pre>$ ansible -i inventaire.ini -m authorized_key -a 'user=user-ansible state=present key="{{ lookup("file", "/home/user-ansible/.ssh/id_ecdsa.pub") }}"' --user user-ansible --ask-pass --become --ask-become-pass all
 seafile2 | SUCCESS => {
   "changed": false,
