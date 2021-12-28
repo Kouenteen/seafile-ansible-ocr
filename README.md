@@ -38,13 +38,11 @@ For both commands below (6a & 6b), we specify the password of the root user beca
 
 Now, the user "user-ansible" is created and in the sudo group. We can now use it in our following commands, or by executing again the previous one to test it.
 
-**6c.**
+**7.**
 <pre>$ ansible -i inventaire.ini -m user -a 'name=user-ansible groups=sudo append=yes ' --user user-ansible --ask-pass --become --ask-become-pass all
   SSH password: ("seafilepwd" because the user is now "user-ansible")
-  SUDO password[defaults to SSH password]: ("seafilepwd")</pre>
+  SUDO password[defaults to SSH password]: ("seafilepwd")
 
-**7.** Create the user "user-ansible" via ansible with your precedently hashed password, and add him into the "sudo" group. It should return : 
-<pre>$ ansible -i inventaire.ini -m user -a 'name=user-ansible groups=sudo append=yes ' --user user-ansible --ask-pass --become --ask-become-pass all
 seafile2 | SUCCESS => {
   "append": true,
   "changed": false,
