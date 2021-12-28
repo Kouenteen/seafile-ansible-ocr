@@ -22,11 +22,12 @@ Example : 192.168.77.1  seafile1
 
 **6.** By using ansible's module "debug", hash a password for the future "user-ansible" that we'll create on "seafile1" and "seafile2" nodes.
 Example : $ ansible localhost -i inventaire.ini -m debug -a "msg={{ 'seafilepwd' | password_hash('sha512', 'sceretsalt') }}"
+
 localhost | SUCCESS => {
   "msg": "$6$sceretsalt$Qo75g/53vx5LUFXNQ2ke7Ng70pwLMCNOz8ogsn4P79MHAyquRNO6VrN/8ZG9z57VFwZi/1AbJnp5oLTKvEiD41"
 }
           
-/!\ For both commands, we specify the password of the root user because the "user-ansible" isn't created yet, later we'll be using the user "user-ansible" and its password /!\
+/!\ For both commands, we specify the password of the root user because the "user-ansible" isn't created yet. Later we'll be using the user "user-ansible" and its password. /!\
 
 $ ansible -i inventaire.ini -m user -a 'name=user-ansible password=$6$sceretsalt$Qo75g/53vx5LUFXNQ2ke7Ng70pwLMCNOz8ogsn4P79MHAyquRNO6VrN/8ZG9z57VFwZi/1AbJnp5oLTKvEiD41 shell=/bin/bash' --user root --ask-pass all
 
