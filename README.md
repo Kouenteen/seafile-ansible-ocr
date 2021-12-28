@@ -12,7 +12,11 @@ There are some important prerequisites before using it.
 
 **2.** On the nodemanager, you will need "SSH", "sshpass", "python3-virtualenv", "default-libmysqlclient-dev" packages. I also created a user "user-ansible" on it for all ansible-related activities (see the step 6). On the deployment nodes, add the "sudo" and "SSH" packages.
 
-**3.** Then, I created a virtualenv "$ virtualenv ansible", activated it by doing <pre>$ source ansible/bin/activate</pre> and finally, installed ansible inside : <pre>$ pip install ansible</pre>
+**3.** Then, I created a virtual environment, activated it, and finally, installed ansible inside :
+<pre>$ cd ~
+$ virtualenv ansible
+$ source ansible/bin/activate
+$ pip install ansible</pre>
 
 **4.** After that, still on the nodemanager, add the deployment nodes in the file "# nano /etc/hosts" because I didn't have any local DNS server.
 <pre>192.168.77.1  seafile1
@@ -103,7 +107,33 @@ seafile1 | SUCCESS => {
   "validate_certs": true
 }</pre>
 
-**9.** Change your user while on the nodemanager with <pre>su - user-ansible</pre> then <pre>source ansible/bin/activate</pre> and make sure that you have the MySQLdb python library installed in your ansible virtual-env by doing <pre>(ansible) user-ansible@nodemanager:~$ pip3 list</pre> If it's not listed, you must install it with this command (or you will likely have some error while executing my seafile_adduser module) :
+**9.** Change your user while on the nodemanager 
+<pre>su - user-ansible
+password :
+source ansible/bin/activate
+(ansible) user-ansible@nodemanager:~$</pre>
+Make sure that you have the MySQLdb python library (named "mysqlclient) installed in your ansible virtual-env :
+<pre>(ansible) user-ansible@nodemanager:~$ pip3 list
+Package       Version
+------------- -------
+ansible       4.3.0
+ansible-core  2.11.3
+cffi          1.14.6
+cryptography  3.4.7
+Jinja2        3.0.1
+MarkupSafe    2.0.1
+<strong>mysqlclient   2.1.0</strong>
+packaging     21.0
+pip           20.3.4
+pkg-resources 0.0.0
+pycparser     2.20
+PyMySQL       1.0.2
+pyparsing     2.4.7
+PyYAML        5.4.1
+resolvelib    0.5.4
+setuptools    44.1.1
+wheel         0.34.2</pre> 
+If it's not listed, you must install it with this command (or you will likely have some error while executing my seafile_adduser module) :
 <pre>(ansible) user-ansible@nodemanager:~$ pip3 install mysqlclient</pre> 
 
 Now you should be able to clone this repository.
