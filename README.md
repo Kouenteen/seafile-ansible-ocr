@@ -9,7 +9,7 @@ The deployment is using Ansible's modules as possible. For some tasks, I didn't 
 There are some important prerequisites before using it.
 
 1. The "nodemanager" here is a PopOS 21.04 (Ubuntu-based), with two deployment nodes which are running on Debian 10 codename Buster : "seafile1" & "seafile2".
-2. On the nodemanager, you will need "SSH", "sshpass", "python3-virtualenv" packages. I also created a user "user-ansible" on it for all ansible-related activities. On the deployment nodes, add the "sudo" and "SSH" packages. 
+2. On the nodemanager, you will need "SSH", "sshpass", "python3-virtualenv", "default-libmysqlclient-dev" packages. I also created a user "user-ansible" on it for all ansible-related activities. On the deployment nodes, add the "sudo" and "SSH" packages. 
 3. Then, I created a virtualenv "$ virtualenv ansible", activated it by doing "$ source ansible/bin/activate" and finally, installed ansible inside : "$ pip install ansible".
 4. After that, still on the nodemanager, add the deployment nodes in the file "# nano /etc/hosts" because I didn't have any local DNS server.
 5. Activate root login via SSH for "seafile1" and "seafile2" nodes, restart the service then accept their keys : "$ ssh root@seafile1" & "$ ssh root@seafile2".
