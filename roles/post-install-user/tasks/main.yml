@@ -3,6 +3,8 @@
   seafile_adduser:
     sql: "INSERT INTO `EmailUser` (id, email, passwd, is_staff, is_active, ctime, reference_id) VALUES (2, 'com@test.fr', 'PBKDF2SHA256$10000$c3232e5b75220ad3de2680d78da812f7e312da937daa3e9bd1eb6fcb4af6abf2$3e2e5067db322bbbb88702b1d996e8a69464039924bea0c3d378ce47d5800f4c', 1, 1, '1639995504175426', NULL);"
     database: "ccnet-db"
+    db_user: "root"
+    db_userpwd: "seafilepwd"
   register: resultat
 - debug: var=resultat
     

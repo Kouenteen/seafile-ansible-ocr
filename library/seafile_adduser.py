@@ -15,6 +15,12 @@ options:
   database:
     description: name of the database
     required: yes
+  db_user:
+    description: name of the mysql user which will be used to insert the SQL statement
+    required: yes
+  db_userpwd:
+    description: password of the mysql user
+    required: yes
 '''
 
 EXAMPLES = '''
@@ -22,42 +28,52 @@ EXAMPLES = '''
   seafile_adduser:
     sql: "insert into EmailUser (email, passwd, is_staff, is_active, ctime) VALUES ('sales@test.com', 'hashed_pw', 0, 1, '1631284357945659');
     database: "ccnet-db"
+    db_user: "root"
+    db_userpwd: "route"
 '''
 
 RETURN = '''
 results:
-    description: return the sql statement result like "Query OK, 1 row affected (0.001 sec)"
+    description: Not supposed to have any MySQL related answer because it's an INSERT INTO statement, but if it's a SELECT statement,
+    it will return the normal mySQL statement's result.
 '''
 
 # Importing library classes
 from ansible.module_utils.basic import AnsibleModule
 import MySQLdb
 
+# /!\------------------------------------------------------------------------------/!\
 # If you want a different default password for the user that will be added, you
 # can generate a new hashed password with the python "function" that is given to
 # you in the file "password.py". After that change the existing hashed password in
 # the YAML file that contains the sql statement
 
-# Arguments definition
+# Arguments definition (main function)
 def main():
     module = AnsibleModule(
         argument_spec=dict(
             sql        = dict(required=True, type='str'),
-	    database   = dict(required=True, type='str'),
+	          database   = dict(required=True, type='str'),
+            db_user    = dict(required=True, type='str'),
+            db_userpwd = dict(required=True, type='str'),
         )
     )
 
     # Arguments values
     sql_local        = module.params.get("sql")
     database_local   = module.params.get("database")
+    db_user_local    = module.params.get("db_user")
+    db_userpwd_local = module.params.get("db_userpwd")
 
     # Database connection
-    db = MySQLdb.connect("localhost","root","seafilepwd",database_local)
+    db = MySQLdb.connect("localhost", db_user_local, db_userpwd_local, database_local)
     cur = db.cursor()
     cur.execute(sql_local)
 
+    # Executing the SQL statement
     db.commit()
 
+    # Retrieving the results
     resultat = cur.fetchall()
     db.close()
 
