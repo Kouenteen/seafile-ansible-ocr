@@ -8,15 +8,15 @@ The deployment is using Ansible's modules as possible. For some tasks, I didn't 
 ## How to use
 There are some important prerequisites before using it.
 
-1. The "nodemanager" here is a PopOS 21.04 (Ubuntu-based), with two deployment nodes which are running on Debian 10 codename Buster : "seafile1" & "seafile2".
-2. On the nodemanager, you will need "SSH", "sshpass", "python3-virtualenv", "default-libmysqlclient-dev" packages. I also created a user "user-ansible" on it for all ansible-related activities. On the deployment nodes, add the "sudo" and "SSH" packages. 
-3. Then, I created a virtualenv "$ virtualenv ansible", activated it by doing "$ source ansible/bin/activate" and finally, installed ansible inside : "$ pip install ansible".
-4. After that, still on the nodemanager, add the deployment nodes in the file "# nano /etc/hosts" because I didn't have any local DNS server.
+**1.** The "nodemanager" here is a PopOS 21.04 (Ubuntu-based), with two deployment nodes which are running on Debian 10 codename Buster : "seafile1" & "seafile2".
+**2.** On the nodemanager, you will need "SSH", "sshpass", "python3-virtualenv", "default-libmysqlclient-dev" packages. I also created a user "user-ansible" on it for all ansible-related activities. On the deployment nodes, add the "sudo" and "SSH" packages. 
+**3.** Then, I created a virtualenv "$ virtualenv ansible", activated it by doing "$ source ansible/bin/activate" and finally, installed ansible inside : "$ pip install ansible".
+**4.** After that, still on the nodemanager, add the deployment nodes in the file "# nano /etc/hosts" because I didn't have any local DNS server.
 Example : 192.168.77.1  seafile1
           192.168.77.2  seafile2
 
-5. Activate root login via SSH for "seafile1" and "seafile2" nodes, restart the service then accept their keys : "$ ssh root@seafile1" & "$ ssh root@seafile2".
-6. By using ansible's module "debug", hash a password for the future "user-ansible" that we'll create on "seafile1" and "seafile2" nodes.
+**5.** Activate root login via SSH for "seafile1" and "seafile2" nodes, restart the service then accept their keys : "$ ssh root@seafile1" & "$ ssh root@seafile2".
+**6.** By using ansible's module "debug", hash a password for the future "user-ansible" that we'll create on "seafile1" and "seafile2" nodes.
 Example : $ ansible localhost -i inventaire.ini -m debug -a "msg={{ 'seafilepwd' | password_hash('sha512', 'sceretsalt') }}"
              localhost | SUCCESS => {
                "msg": "$6$sceretsalt$Qo75g/53vx5LUFXNQ2ke7Ng70pwLMCNOz8ogsn4P79MHAyquRNO6VrN/8ZG9z57VFwZi/1AbJnp5oLTKvEiD41"
@@ -36,7 +36,7 @@ $ ansible -i inventaire.ini -m user -a 'name=user-ansible groups=sudo append=yes
   SSH password: ("seafilepwd" because the user is now "user-ansible")
   SUDO password[defaults to SSH password]: ("seafilepwd")
 
-7. Create the user "user-ansible" via ansible with your precedently hashed password, and add him into the "sudo" group. It should return : 
+**7.** Create the user "user-ansible" via ansible with your precedently hashed password, and add him into the "sudo" group. It should return : 
 <pre>$ ansible -i inventaire.ini -m user -a 'name=user-ansible groups=sudo append=yes ' --user user-ansible --ask-pass --become --ask-become-pass all
 seafile2 | SUCCESS => {
   "append": true,
@@ -65,7 +65,7 @@ seafile1 | SUCCESS => {
   "uid": 1001
 }</pre>
 
-8. Still on the nodemanager, generate ECDSA SSH keys : '$ ssh-keygen -t ecdsa' and by using the module 'authorized_key', send them to the nodes :
+**8.** Still on the nodemanager, generate ECDSA SSH keys : '$ ssh-keygen -t ecdsa' and by using the module 'authorized_key', send them to the nodes :
 <pre>$ ansible -i inventaire.ini -m authorized_key -a 'user=user-ansible state=present key="{{ lookup("file", "/home/user-ansible/.ssh/id_ecdsa.pub") }}"' --user user-ansible --ask-pass --become --ask-become-pass all
 seafile2 | SUCCESS => {
   "changed": false,
@@ -98,16 +98,16 @@ seafile1 | SUCCESS => {
   "validate_certs": true
 }</pre>
 
-9. Change your user while on the nodemanager with "su - user-ansible" then "source ansible/bin/activate" and you should be ready to clone this repository.
+**9.** Change your user while on the nodemanager with "su - user-ansible" then "source ansible/bin/activate" and you should be ready to clone this repository.
 Make sure that you have the MySQLdb python library installed in your ansible virtual-env by doing "pip list". If it's not listed, you must install it with the command "pip install mysqlclient" or you will likely have some error while executing my seafile_adduser module.
 
-10. Clone the repository in your user-ansible's home folder, and be sure to be in your ansible's virtual environment : "(ansible) user-ansible@nodemanager:~$".
+**10.** Clone the repository in your user-ansible's home folder, and be sure to be in your ansible's virtual environment : "(ansible) user-ansible@nodemanager:~$".
 You should be able to see the files with the "ls" command.
 
-11. If your machines are not named exactly like mine, you must edit the "inventaire.ini" file which contains their hostnames.
+**11.** If your machines are not named exactly like mine, you must edit the "inventaire.ini" file which contains their hostnames.
 Same thing for the file "configuration.ini" because they are specified at the start of this file.
 
-12. Execute the "configuration.yml" file with the following command to have Seafile installed : "ansible-playbook -i inventaire.ini --user user-ansible --become --ask-become-pass configuration.yml -e 'ansible_python_interpreter=/usr/bin/python3' --ask-vault-pass"
+**12.** Execute the "configuration.yml" file with the following command to have Seafile installed : "ansible-playbook -i inventaire.ini --user user-ansible --become --ask-become-pass configuration.yml -e 'ansible_python_interpreter=/usr/bin/python3' --ask-vault-pass"
     BECOME password : ("seafilepwd")
     Vault password : ("route")
 
