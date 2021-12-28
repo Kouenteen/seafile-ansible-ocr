@@ -12,25 +12,25 @@ There are some important prerequisites before using it.
 2. On the nodemanager, you will need "SSH", "sshpass", "python3-virtualenv", "default-libmysqlclient-dev" packages. I also created a user "user-ansible" on it for all ansible-related activities. On the deployment nodes, add the "sudo" and "SSH" packages. 
 3. Then, I created a virtualenv "$ virtualenv ansible", activated it by doing "$ source ansible/bin/activate" and finally, installed ansible inside : "$ pip install ansible".
 4. After that, still on the nodemanager, add the deployment nodes in the file "# nano /etc/hosts" because I didn't have any local DNS server.
-# Example : 192.168.77.1  seafile1
-#           192.168.77.2  seafile2
+Example : 192.168.77.1  seafile1
+          192.168.77.2  seafile2
 
 5. Activate root login via SSH for "seafile1" and "seafile2" nodes, restart the service then accept their keys : "$ ssh root@seafile1" & "$ ssh root@seafile2".
 6. By using ansible's module "debug", hash a password for the future "user-ansible" that we'll create on "seafile1" and "seafile2" nodes.
-# Example : $ ansible localhost -i inventaire.ini -m debug -a "msg={{ 'seafilepwd' | password_hash('sha512', 'sceretsalt') }}"
-#              localhost | SUCCESS => {
-#                "msg": "$6$sceretsalt$Qo75g/53vx5LUFXNQ2ke7Ng70pwLMCNOz8ogsn4P79MHAyquRNO6VrN/8ZG9z57VFwZi/1AbJnp5oLTKvEiD41"
-#              }
+Example : $ ansible localhost -i inventaire.ini -m debug -a "msg={{ 'seafilepwd' | password_hash('sha512', 'sceretsalt') }}"
+             localhost | SUCCESS => {
+               "msg": "$6$sceretsalt$Qo75g/53vx5LUFXNQ2ke7Ng70pwLMCNOz8ogsn4P79MHAyquRNO6VrN/8ZG9z57VFwZi/1AbJnp5oLTKvEiD41"
+             }
           
-# /!\ For both commands, we specify the password of the root user because the "user-ansible" isn't created yet, later we'll be using the user "user-ansible" and its password /!\
+/!\ For both commands, we specify the password of the root user because the "user-ansible" isn't created yet, later we'll be using the user "user-ansible" and its password /!\
 
 $ ansible -i inventaire.ini -m user -a 'name=user-ansible password=$6$sceretsalt$Qo75g/53vx5LUFXNQ2ke7Ng70pwLMCNOz8ogsn4P79MHAyquRNO6VrN/8ZG9z57VFwZi/1AbJnp5oLTKvEiD41 shell=/bin/bash' --user root --ask-pass all
 
 $ ansible -i inventaire.ini -m user -a 'name=user-ansible groups=sudo append=yes ' --user root --ask-pass all
   SSH password: ("route" because the user is "root")
 
-# /!\ Now, the user-ansible is created and is in the sudo group. /!\
-# We can now use it in our following commands, like by executing again the previous one.
+/!\ Now, the user-ansible is created and is in the sudo group. /!\
+We can now use it in our following commands, like by executing again the previous one.
 
 $ ansible -i inventaire.ini -m user -a 'name=user-ansible groups=sudo append=yes ' --user user-ansible --ask-pass --become --ask-become-pass all
   SSH password: ("seafilepwd" because the user is now "user-ansible")
@@ -113,7 +113,7 @@ Same thing for the file "configuration.ini" because they are specified at the st
 
 And if everything is okay, it will start to execute each task in order to prepare the seafile installation and configuration.
 
-# The password for the post-install user "com@test.fr" will be "route", if you want to change it, I'm providing you a python file that will hash the wanted password. It's stored in "~./library/password_seafile.py"and you'll only need to edit the file and change the value of the 'password' variable.
+Info : The password for the post-install user "com@test.fr" will be "route", if you want to change it, I'm providing you a python file that will hash the wanted password. It's stored in "~./library/password_seafile.py"and you'll only need to edit the file and change the value of the 'password' variable.
 
 ## What is the script doing ?
 The script is :
