@@ -1,0 +1,21 @@
+---
+# tasks file for user
+
+#0.
+- name: Suppression de l'utilisateur 'seafile'
+  user:
+    name: "seafile"
+    state: absent
+    remove: yes
+
+#1.
+- name: Ajout de l'utilisateur 'seafile'
+  ansible.builtin.user:
+    name: "seafile"
+    password: "{{ seafile_user_password }}"
+    shell: /bin/bash
+    uid: 1002
+    groups: sudo
+    append: yes
+    create_home: yes
+    state: present

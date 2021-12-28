@@ -1,0 +1,168 @@
+---
+# tasks file for seafile
+
+#1.
+- name: Télécharger l'archive seafile
+  get_url:
+    url: "https://s3.eu-central-1.amazonaws.com/download.seadrive.org/seafile-server_8.0.6_x86-64.tar.gz"
+    dest: "/var/seafile-server_8.0.6_x86-64.tar.gz"
+
+#2.
+- name: Décompréssion de l'archive seafile
+  unarchive:
+    src: "/var/seafile-server_8.0.6_x86-64.tar.gz"
+    dest: "/opt"
+    remote_src: yes
+    owner: "seafile"
+    group: "seafile"
+
+#2.5 numéro 1
+- name: Copie du script python "setup-seafile-mysql.py"
+  copy:
+    remote_src: no
+    src: "/home/user-ansible/roles/seafile/files/setup-seafile-mysql.py"
+    dest: "/opt/seafile-server-8.0.6/"
+    owner: "seafile"
+    group: "seafile"
+
+#2.5 numéro 2
+- name: Copie du script python "setup-seafile-mysql.sh"
+  copy:
+    remote_src: yes
+    src: "/opt/seafile-server-8.0.6/setup-seafile-mysql.sh"
+    dest: "/opt/seafile-server-8.0.6/"
+    owner: "seafile"
+    group: "seafile"
+
+#3.
+- name: Exécution du script setup-mysql de seafile
+  raw: cd /opt/seafile-server-8.0.6 ; ./setup-seafile-mysql.sh
+  args:
+    executable: "/bin/bash"
+
+#3.5 numéro 1
+- name: Création du répertoire "/opt/logs"
+  file:
+    path: "/opt/logs"
+    state: directory
+    mode: "0755"
+
+#3.5 numéro 2
+- name: Création du répertoire "/opt/pids"
+  file:
+    path: "/opt/pids"
+    state: directory
+    mode: "0755"
+
+#4.
+- name: Changement des permissions pour "/opt/seafile-server-latest"
+  file:
+    path: "/opt/seafile-server-latest"
+    state: directory
+    recurse: yes
+    owner: "seafile"
+    group: "seafile"
+
+#5.
+- name: Changement des permissions pour "/opt/seafile-data"
+  file:
+    path: "/opt/seafile-data"
+    state: directory
+    recurse: yes
+    owner: "seafile"
+    group: "seafile"
+
+#6.
+- name: Changement des permissions pour "/opt/ccnet"
+  file: 
+    path: "/opt/ccnet"
+    state: directory
+    recurse: yes
+    owner: "seafile"
+    group: "seafile"
+
+#7.
+- name: Changement des permissions pour "/opt/seahub-data"
+  file: 
+    path: "/opt/seahub-data"
+    state: directory
+    recurse: yes
+    owner: "seafile"
+    group: "seafile"
+
+#8.
+- name: Changement des permissions pour "/opt/conf"
+  file: 
+    path: "/opt/conf"
+    state: directory
+    recurse: yes
+    owner: "seafile"
+    group: "seafile"
+
+#9.
+- name: Changement des permissions pour "/opt/logs"
+  file: 
+    path: "/opt/logs"
+    state: directory
+    recurse: yes
+    owner: "seafile"
+    group: "seafile"
+
+#10.
+- name: Changement des permissions pour "/opt/pids"
+  file: 
+    path: "/opt/pids"
+    state: directory
+    recurse: yes
+    owner: "seafile"
+    group: "seafile"
+
+#11.
+- name: Copie du script bash "seahub.sh"
+  copy:
+    remote_src: no
+    src: "/home/user-ansible/roles/seafile/files/seahub.sh"
+    dest: "/opt/seafile-server-latest/"
+    owner: "seafile"
+    group: "seafile"
+
+#12.
+- name: Copie du script python "check_init_admin.py"
+  copy:
+    remote_src: no
+    src: "/home/user-ansible/roles/seafile/files/check_init_admin.py"
+    dest: "/opt/seafile-server-latest/"
+    owner: "seafile"
+    group: "seafile"
+
+#13.
+- name: Exécution du script "seafile.sh"
+  raw: "sudo -u seafile sh -c 'cd /opt/seafile-server-latest/; ./seafile.sh start'"
+
+#14.
+- name: Exécution du script "seahub.sh"
+  raw: "sudo -u seafile sh -c 'cd /opt/seafile-server-latest/; ./seahub.sh start'"
+
+#15.
+- name: Copie du fichier de configuration nginx "seafile.conf"
+  copy:
+    remote_src: no
+    src: "/home/user-ansible/roles/seafile/files/seafile.conf"
+    dest: "/etc/nginx/conf.d/"
+
+#16.
+- name: Installation du paquet "rpl" pour remplacer l'IP
+  apt:
+    name: rpl
+    update_cache: yes
+    state: present
+
+#17.
+- name: Remplacement de "SERVERADDRESS" par l'IP de la machine
+  raw: "rpl SERVERADDRESS `hostname -I` /etc/nginx/conf.d/seafile.conf"
+
+#18.
+- name: Redémarrage du service "nginx" pour prendre en compte les modifications
+  service:
+    name: nginx
+    state: restarted

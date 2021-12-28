@@ -1,0 +1,38 @@
+---
+# tasks file for paquets
+
+#1.
+- name: "Installation de la première salve de paquets : apt"
+  apt:
+    update_cache: yes
+    state: present
+    pkg:
+    - python2
+    - python3
+    - python3-setuptools
+    - python3-pip
+    - default-libmysqlclient-dev
+    - default-jre
+    - poppler-utils
+
+#2.
+- name: "Installation de la deuxième salve de paquets : pip"
+  pip:
+    name:
+    - Pillow
+    - pylibmc
+    - captcha
+    - jinja2
+    - sqlalchemy==1.4.3
+    - django-pylibmc
+    - django-simple-captcha
+    - python3-ldap
+    - mysqlclient
+
+#3.
+- name: "Installation de la troisième salve de paquets : apt"
+  apt:
+    update_cache: yes
+    pkg:
+    - mariadb-server
+    - nginx

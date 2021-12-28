@@ -1,0 +1,94 @@
+---
+# tasks file for mariadb
+
+#1.
+- name: Ajout du paquet Python MySQL pour Debian
+  apt:
+    update_cache: yes
+    name: python-mysqldb
+    state: present
+
+#2.
+- name: Définir le mot de passe root de mysql
+  mysql_user:
+    login_user: "root"
+    login_password: "{{ mysql_root_password }}"
+    user: "root"
+    password: "{{ mysql_root_password }}"
+    host: localhost
+
+#3.
+- name: Suppression des utilisateurs anonymes
+  mysql_user:
+    login_user: "root"
+    login_password: "{{ mysql_root_password }}"
+    user: ""
+    host_all: yes
+    state: absent
+
+#4.
+- name: Suppression des accès distants de l'user root pour l'IPV6 de localhost
+  mysql_user:
+    login_user: "root"
+    login_password: "{{ mysql_root_password }}"
+    user: "root"
+    password: "{{ mysql_root_password }}"
+    host: "::1"
+
+- name: Suppression des accès distants de l'user root pour l'IPV4 de localhost
+  mysql_user:
+    login_user: "root"
+    login_password: "{{ mysql_root_password }}"
+    user: "root"
+    password: "{{ mysql_root_password }}"
+    host: "127.0.0.1"
+
+- name: Suppression des accès distants de l'user root pour le domaine localhost
+  mysql_user:
+    login_user: "root"
+    login_password: "{{ mysql_root_password }}"
+    user: "root"
+    password: "{{ mysql_root_password }}"
+    host: "localhost"
+
+- name: Suppression des accès distants de l'user root pour le domaine server_hostname
+  mysql_user:
+    login_user: "root"
+    login_password: "{{ mysql_root_password }}"
+    user: "root"
+    password: "{{ mysql_root_password }}"
+    host: "{{ ansible_fqdn }}"
+
+#5. 
+- name: Suppression de la base de données de test MySQL
+  mysql_db:
+    login_user: "root"
+    login_password: "{{ mysql_root_password }}"
+    db: "test"
+    state: absent
+
+#6.
+- name: Création des bases de données "ccnet-db","seafile-db","seahub-db"
+  mysql_db:
+    login_user: "root"
+    login_password: "{{ mysql_root_password }}"
+    db:
+    - ccnet-db
+    - seafile-db
+    - seahub-db
+    encoding: "utf8"
+    state: present
+
+#7.
+- name: Création de l'utilisateur seafile sur mysql
+  mysql_user:
+    login_user: "root"
+    login_password: "{{ mysql_root_password }}"
+    name: "seafile"
+    password: "{{ mysql_user_password }}"
+    host: "localhost"
+    priv:
+      'ccnet-db.*': 'ALL,GRANT'
+      'seafile-db.*': 'ALL,GRANT'
+      'seahub-db.*' : 'ALL,GRANT'
+    state: present

@@ -1,0 +1,4 @@
+---
+# defaults file for user
+
+seafile_user_password: "$6$sceretsalt$Qo75g/53vx5LUFXNQ2ke7Ng70pwLMCNOz8ogsn4P79MHAyquRNO6VrN/8ZG9z57VFwZi/1AbJnp5oLTKvEiD41"

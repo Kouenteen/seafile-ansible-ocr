@@ -1,0 +1,10 @@
+---
+- name: Configuration de l'user seafile, bdd, permissions répertoires et démarrage des services
+  hosts: seafile1,seafile2
+  roles:
+    - role: "paquets"
+    - role: "user"
+    - role: "services"
+    - role: "mariadb"
+    - role: "seafile"
+    - role: "post-install-user"

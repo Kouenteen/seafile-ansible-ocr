@@ -1,0 +1,16 @@
+---
+# tasks file for services
+
+#1.
+- name: Activation et démarrage du service mariadb
+  service:
+    name: mariadb
+    enabled: yes
+    state: restarted
+
+#2.
+- name: Activation et démarrage du service nginx
+  service:
+    name: nginx
+    enabled: yes
+    state: restarted
