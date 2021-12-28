@@ -77,4 +77,6 @@ seafile1 | SUCCESS => {
 }</pre>
 
 9. Change your user while on the nodemanager with "su - user-ansible" then "source ansible/bin/activate" and you should be ready to clone this repository.
-<pre>Add the steps for cloning and start using it</pre>
+Make sure that you have the MySQLdb python library installed in your ansible virtual-env by doing "pip list". If it's not listed, you must install it with the command "pip install mysqlclient" or you will likely have some error while executing my seafile_adduser module.
+
+10. <pre>Add the steps for cloning and start using it</pre>
